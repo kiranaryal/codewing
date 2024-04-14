@@ -14,20 +14,19 @@
             </div>
         </div>
     </div>
-    <form action="{{ route('upload.json') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('upload.json') }}" method="POST" enctype="multipart/form-data" class="flex flex-col space-y-6" >
         @csrf
-        <input type="file" name="json_file">
+        <input type="file" name="json_file" class="mx-auto" accept=".json">
         @if ($errors->any())
-        <div>
-            <strong>Whoops!</strong> There were some problems with your input.<br><br>
+        <div class="text-red-700 mx-auto">
             <ul>
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
             </ul>
         </div>
-    @endif
-        <button type="submit">Upload JSON File</button>
+        @endif
+        <button type="submit" class="bg-green-200 mx-auto p-3 rounded">Upload JSON File</button>
     </form>
 
 </x-app-layout>
