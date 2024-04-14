@@ -51,20 +51,25 @@ class RegisteredUserController extends Controller
     }
     public function github(){
 
-        $githubUser = Socialite::driver('github')->user();
+        try {
+            $githubUser = Socialite::driver('github')->user();
 
-        $user = User::updateOrCreate(
-            ['github_id' => $githubUser->id],
-            [
-                'name' => $githubUser->name,
-                'email' => $githubUser->email,
-                'github_token' => $githubUser->token,
-                'github_refresh_token' => $githubUser->refreshToken,
-            ]
-        );
+            $user = User::updateOrCreate(
+                ['github_id' => $githubUser->id],
+                [
+                    'name' => $githubUser->name,
+                    'email' => $githubUser->email,
+                    'github_token' => $githubUser->token,
+                    'github_refresh_token' => $githubUser->refreshToken,
+                ]
+            );
 
-        Auth::login($user);
+            Auth::login($user);
 
-        return redirect('/dashboard');
+            return redirect('/dashboard');
+        } catch (\Exception $e) {
+            Log::error('GitHub authentication error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to authenticate with GitHub.');
+        }
 }
 }
